@@ -3,14 +3,26 @@ import User from "./model/User.js";
 import Habit from "./model/Habit.js";
 import express from "express";
 import dotenv from "dotenv";
+import cors from "cors";
+
+// import controllers
+import userController from "./routes/user_controller.js";
+import habitController from "./routes/habit_controller.js";
+
+const port = 3000;
 
 // get environment variable from .env
 dotenv.config();
 
 const app = express();
-const port = 3000;
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
+// connect to MongoDB
 const uri = process.env.MONGO_URI;
+
+mongoose.connect(uri);
 
 // Event listeners for connection success or failure
 mongoose.connection.on("connected", () => {
@@ -21,45 +33,24 @@ mongoose.connection.on("error", (err) => {
   console.error("❌ MongoDB connection error:", err);
 });
 
-async function startApp() {
-  try {
-    await mongoose.connect(uri);
+// set up routes
+app.use("/habits", habitController);
+app.use("/users", userController);
 
-    // create a new user
-    const user1 = new User({
-      username: "first user!",
-      email: "first@gmail.com",
-      password: "password",
-    });
+app.get("/", (req, res) => {
+  res.send("Habit API!");
+});
 
-    await user1.save();
-    const firstUser = await User.findOne({});
-    console.log(firstUser);
+app.use((req, res) => {
+  res.status(404).send("Route not Found");
+});
 
-    // create a new habit
-    const habit1 = new Habit({
-      title: "first habit",
-      strict: false,
-      user1: user1._id,
-      dateEnd: new Date("2022-01-01"),
-      dateStart: new Date("2021-01-01"),
-      streakCounter: 0,
-      habitDays: [],
-    });
+app.use((err, req, res, next) => {
+  res.status(err.status).json(err);
+});
 
-    await habit1.save();
-    const firstHabit = await Habit.findOne({});
-    console.log(firstHabit);
+const listener = () => {
+  console.log(`server running on port ${port}`);
+};
 
-    app.get("/", (req, res) => {
-      res.send("Hello World!");
-    });
-
-    app.listen(port, () => {
-      console.log(`Server listening on port ${port}`);
-    });
-  } catch (error) {
-    console.error("Error connecting to MongoDB:", error);
-  }
-}
-startApp();
+app.listen(port, listener);
