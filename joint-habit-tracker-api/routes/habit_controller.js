@@ -44,7 +44,7 @@ router.get("/:userId", async (req, res, next) => {
     })
       .populate("user1")
       .populate("user2")
-      .populate("habitDays");
+      .populate("habitDays"); // TODO: MAY BE ABLE TO REMOVE THIS
     if (!habits) {
       return res.status(404).json({ message: "User does not have any habits" });
     }
