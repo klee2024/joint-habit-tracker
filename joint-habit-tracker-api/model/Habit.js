@@ -2,7 +2,10 @@ import mongoose from "mongoose";
 const { Schema, model } = mongoose;
 
 const habitSchema = new Schema({
-  title: String,
+  title: {
+    type: String,
+    required: true,
+  },
   strict: Boolean,
   user1: {
     type: Schema.Types.ObjectId,
@@ -16,7 +19,10 @@ const habitSchema = new Schema({
   },
   dateEnd: Date,
   dateStart: Date,
-  streakCounter: Number,
+  streakCounter: {
+    type: Number,
+    default: 0,
+  },
   habitDays: [
     {
       user1Complete: Boolean,
