@@ -1,3 +1,13 @@
-<p>habit-main works!</p>
-<app-habit-today> </app-habit-today>
-<app-habit-past-days></app-habit-past-days>
+<p>----- habit-main -----</p>
+<div>back button</div>
+<div>edit button</div>
+<h1>habit name</h1>
+<div class="habit-main" id="habit-users">
+  <div class="user" id="guest-user">guest user profile</div>
+  <div class="user" id="home-user">home user profile</div>
+</div>
+<div class="habit-main" id="habit-tracker">
+  <app-habit-today> </app-habit-today>
+  <app-habit-past-days></app-habit-past-days>
+</div>
+<app-streak-counter></app-streak-counter>
