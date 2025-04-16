@@ -1,5 +1,6 @@
 import express from "express";
 import mongoose from "mongoose";
+import isValidMongooseId from "../utils.js";
 
 const router = express.Router();
 
@@ -8,18 +9,41 @@ import Habit from "../model/Habit.js";
 import { mongo, Types } from "mongoose";
 const ObjectId = Types.ObjectId;
 
+// -------------- MIDDLEWARE / VALIDATORS -------------
+
+// example
+/**
+ * const validateUser = [
+    check('name').notEmpty().withMessage('Name is required'),
+    check('email').isEmail().withMessage('Invalid email format'),
+    check('age').isInt({ min: 0 }).withMessage('Age must be a non-negative integer'),
+    (req, res, next) => {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
+      next();
+    }
+  ];
+ */
+
+// TODO: standardize error handling
+// TODO: add middleware for validation
+
+// TODO: finish POST route
 // CREATE
 // creating a habit
 router.post("/", async (req, res, next) => {
   try {
     const newHabitBody = req.body;
     // TODO: add validation and error handling
-    const newHabit = await Habit.create(habitData);
+    const newHabit = await Habit.create(newHabitBody);
     if (!newHabit) {
       const error = new Error("Could not create habit");
       error.status = 400;
       return next(error);
     }
+    res.status(201).json(newHabit);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -94,10 +118,60 @@ router.get("/:habitId", async (req, res, next) => {
   }
 });
 
-// TODO: add UPDATE route
+// updating habit settings
+router.put("/:habitId", async (req, res, next) => {
+  try {
+    const habitId = req.params.habitId;
+    // TODO: add validation to the habit body
+    const newHabit = req.body;
+    if (!isValidMongooseId(habitId)) {
+      res.status(400).json({ message: "Habit id is not valid" });
+    }
+    // TODO: confirm that this is the correct format for method call
+    const updatedHabit = findByIdAndUpdate(habitId, newHabit, {
+      new: true,
+      runValidators: true,
+    });
+    if (!updatedHabit) {
+      res.status(400).json(`habit ${habitId} does not exist`);
+    }
+    res.status(200).json(updatedHabit);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// adding the second user to the habit when they accept
+router.put("/:habitId/user2/:userId", async (req, res, next) => {
+  try {
+    const habitId = req.params.habitId;
+    const userId = req.params.userId;
+    if (!isValidMongooseId(habitId)) {
+      return res.status(400).json({ message: "Habit ID is not valid" });
+    }
+    if (!isValidMongooseId(userId)) {
+      return res.status(400).json({ message: "User ID is not valid" });
+    }
+    const updatedHabit = await Habit.findByIdAndUpdate(
+      habitId,
+      { user2: userId },
+      { new: true, runValidators: true }
+    );
+    if (!updatedHabit) {
+      res
+        .status(400)
+        .json({ message: `habit ${habitId} habit does not exist` });
+    }
+    // TODO: confirm PUT status code
+    res.status(200).json(updatedHabit);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
 
 // DELETE
 // deleting a habit
+// only delete habit if both users want to delete
 router.delete("/:habitId", async (req, res, next) => {
   try {
     const habitId = req.params.habitId;
@@ -114,14 +188,5 @@ router.delete("/:habitId", async (req, res, next) => {
     res.status(500).next({ message: err.message });
   }
 });
-
-function isValidMongooseId(id) {
-  console.log(id);
-  if (id.length != 24 || !isNaN(Number(id))) {
-    return false;
-  }
-  const mongooseId = new ObjectId(id);
-  return ObjectId.isValid(mongooseId);
-}
 
 export default router;
