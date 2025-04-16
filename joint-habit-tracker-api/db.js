@@ -1,8 +1,10 @@
 const { MongoClient, ServerApiVersion } = require("mongodb");
-import mongoose from "mongoose";
-const uri =
-  "mongodb+srv://1kaya2317:mae71LTNLw5n52z2@cluster0.hyrek9j.mongodb.net/habitDatabasev1?retryWrites=true&w=majority&appName=Cluster0";
+import dotenv from "dotenv";
 
+import mongoose from "mongoose";
+dotenv.config();
+
+const uri = process.env.MONGO_URI;
 mongoose.connect(uri);
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
