@@ -11,21 +11,30 @@ const ObjectId = Types.ObjectId;
 
 // -------------- MIDDLEWARE / VALIDATORS -------------
 
-// example
-/**
- * const validateUser = [
-    check('name').notEmpty().withMessage('Name is required'),
-    check('email').isEmail().withMessage('Invalid email format'),
-    check('age').isInt({ min: 0 }).withMessage('Age must be a non-negative integer'),
-    (req, res, next) => {
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-      }
-      next();
-    }
-  ];
- */
+const validateHabit = (req, res, next) => {
+  const habit = req.body;
+
+  // there are 3 required fields
+  const requiredFields = ["title", "strict", "user1"];
+  const missingFields = requiredFields.filter(
+    (field) => !habit.hasOwnProperty(field)
+  );
+  const optionalFields = ["user2", "dateEnd"];
+
+  if (
+    missingFields.length > 0 ||
+    habit.length < 3 ||
+    habit.length > requiredFields.length + optionalFields.length
+  ) {
+    return res.status(400).json({
+      message: "Error: Missing or invalid properties. Cannot create new habit",
+    });
+  }
+
+  // TODO: check that the types are correct
+
+  next(); // Proceed to the next middleware or route handler
+};
 
 // TODO: standardize error handling
 // TODO: add middleware for validation
@@ -33,7 +42,7 @@ const ObjectId = Types.ObjectId;
 // TODO: finish POST route
 // CREATE
 // creating a habit
-router.post("/", async (req, res, next) => {
+router.post("/", validateHabit, async (req, res, next) => {
   try {
     const newHabitBody = req.body;
     // TODO: add validation and error handling

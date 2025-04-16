@@ -6,7 +6,10 @@ const habitSchema = new Schema({
     type: String,
     required: true,
   },
-  strict: Boolean,
+  strict: {
+    type: Boolean,
+    required: true,
+  },
   user1: {
     type: Schema.Types.ObjectId,
     ref: "User",
@@ -17,12 +20,20 @@ const habitSchema = new Schema({
     ref: "User",
     required: false,
   },
-  dateEnd: Date,
-  dateStart: Date,
+  dateEnd: {
+    type: Date,
+    required: false,
+  },
+  dateStart: {
+    type: Date,
+    default: Date.now, // Set default to current date and time
+  },
+  // handled on the backend
   streakCounter: {
     type: Number,
     default: 0,
   },
+  //handled on the backend
   habitDays: [
     {
       user1Complete: Boolean,
