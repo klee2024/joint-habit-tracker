@@ -76,7 +76,7 @@ router.get("/", async (req, res, next) => {
 });
 
 // get all habits for a user
-router.get("user/:userId", async (req, res, next) => {
+router.get("/user/:userId", async (req, res, next) => {
   try {
     const userId = req.params.userId;
     // check if the ID is valid
