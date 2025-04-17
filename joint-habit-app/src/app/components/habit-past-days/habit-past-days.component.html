@@ -1,1 +1,23 @@
 <p>habit-past-days works!</p>
+
+@for(habitDay of habitItems(); track habitDay.id){
+<div class="habit-day" [id]="habitDay.id">
+  <p id="date">{{ habitDay.date }}</p>
+  <!-- want this to populate based on backend request for other user -->
+  <input
+    type="checkbox"
+    id="guest-user"
+    name="habit"
+    [checked]="habitDay.user1Complete"
+  />
+  <div class="line" id="guest-user">-------</div>
+  <div class="star"><3</div>
+  <div class="line" id="home-user">-------</div>
+  <input
+    type="checkbox"
+    id="home-user"
+    name="habit"
+    [checked]="habitDay.user2Complete"
+  />
+</div>
+}
