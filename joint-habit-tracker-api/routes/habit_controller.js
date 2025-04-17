@@ -11,6 +11,7 @@ const ObjectId = Types.ObjectId;
 
 // -------------- MIDDLEWARE / VALIDATORS -------------
 
+// TODO: finish validation middleware
 const validateHabit = (req, res, next) => {
   const habit = req.body;
 
@@ -127,6 +128,7 @@ router.get("/:habitId", async (req, res, next) => {
   }
 });
 
+// TODO: make this a PATCH call - only update the selected habit settings
 // updating habit settings
 router.put("/:habitId", async (req, res, next) => {
   try {
@@ -173,6 +175,45 @@ router.put("/:habitId/user2/:userId", async (req, res, next) => {
     }
     // TODO: confirm PUT status code
     res.status(200).json(updatedHabit);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// TODO: test this
+// adding on a new day to a habit
+// TODO: add middleware for a habit day payload
+router.post("/:habitId/habitDays", async (req, res, next) => {
+  try {
+    const habitId = req.params.habitId;
+    if (!isValidMongooseId(habitId)) {
+      return res.status(400).json({ message: "Habit ID is not valid" });
+    }
+
+    const newHabitDay = req.body;
+    newHabitDay[date] = Date.now();
+
+    let updatedHabit;
+    // updating the streak counter and total days the habit is completed
+    // increase the streak and add to the total count
+    if (newHabitDay.user1 && newHabitDay.user2) {
+      updatedHabit = await Habit.findByIdAndUpdate(habitId, {
+        $push: { habitDays: newHabitDay },
+        $inc: { streakCounter: 1, totalDaysHabitCompleted: 1 },
+      });
+    } else {
+      updatedHabit = await Habit.findByIdAndUpdate(habitId, {
+        $push: { habitDays: newHabitDay },
+        streakCounter: 0,
+      });
+    }
+
+    if (!updatedHabit) {
+      return res
+        .status(400)
+        .json({ message: `habit ${habitId} habit does not exist` });
+    }
+    return res.status(200).json(updatedHabit);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

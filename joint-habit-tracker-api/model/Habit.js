@@ -33,6 +33,11 @@ const habitSchema = new Schema({
     type: Number,
     default: 0,
   },
+  // handled on the backend
+  totalDaysHabitCompleted: {
+    type: Number,
+    default: 0,
+  },
   //handled on the backend
   habitDays: [
     {
