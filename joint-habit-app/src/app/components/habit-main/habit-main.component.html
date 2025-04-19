@@ -1,10 +1,10 @@
 <p>----- habit-main -----</p>
 <div>back button</div>
 <div>edit button</div>
-<h1>habit name</h1>
+<h1>{{ habit()?.title }}</h1>
 <div class="habit-main" id="habit-users">
-  <div class="user" id="guest-user">guest user profile</div>
-  <div class="user" id="home-user">home user profile</div>
+  <div class="user" id="guest-user">user 1: {{ habit()?.user1?.username }}</div>
+  <div class="user" id="home-user">user 2: {{ habit()?.user2?.username }}</div>
 </div>
 <div class="habit-main" id="habit-tracker">
   <app-habit-today> </app-habit-today>
