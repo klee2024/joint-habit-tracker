@@ -11,7 +11,7 @@
   </div>
   <div class="habit-main" id="habit-tracker">
     <app-habit-today> </app-habit-today>
-    <app-habit-past-days></app-habit-past-days>
+    <app-habit-past-days [pastDays]="h.habitDays"></app-habit-past-days>
   </div>
   <app-streak-counter
     [streak]="h.streakCounter"

@@ -1,4 +1,4 @@
-@for(habitDay of habitItems(); track habitDay._id){
+@for(habitDay of pastDays(); track habitDay._id){
 <div class="habit-day" [id]="habitDay._id">
   <p id="date">{{ habitDay.date | date : "MMM d, y" }}</p>
   <input
