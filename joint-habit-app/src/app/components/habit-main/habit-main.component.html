@@ -1,18 +1,20 @@
 <p>----- habit-main -----</p>
 <div>back button</div>
 <div>edit button</div>
-<h1>{{ habit()?.title }}</h1>
-<div class="habit-main" id="habit-users">
-  <div class="user" id="guest-user">user 1: {{ habit()?.user1?.username }}</div>
-  <div class="user" id="home-user">user 2: {{ habit()?.user2?.username }}</div>
-</div>
-<div class="habit-main" id="habit-tracker">
-  <app-habit-today> </app-habit-today>
-  <app-habit-past-days></app-habit-past-days>
-</div>
 <ng-container *ngIf="habit() as h">
+  <h1>{{ h.title }}</h1>
+  <div class="habit-main" id="habit-users">
+    <div class="user" id="guest-user">user 1: {{ h.user1?.username }}</div>
+    <div class="user" id="home-user">
+      user 2: {{ h.user2?.username || null }}
+    </div>
+  </div>
+  <div class="habit-main" id="habit-tracker">
+    <app-habit-today> </app-habit-today>
+    <app-habit-past-days></app-habit-past-days>
+  </div>
   <app-streak-counter
-    [streak]="habit()?.streakCounter"
-    [total]="habit()?.totalDaysHabitCompleted"
+    [streak]="h.streakCounter"
+    [total]="h.totalDaysHabitCompleted"
   ></app-streak-counter>
 </ng-container>
