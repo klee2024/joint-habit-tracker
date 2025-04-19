@@ -1,31 +1,17 @@
 import { Injectable, inject } from '@angular/core';
 import { HabitDay } from '../model/habitDay.type';
 import { HttpClient } from '@angular/common/http';
+import { Habit } from '../model/habit.type';
 @Injectable({
   providedIn: 'root',
 })
 export class HabitsService {
   http = inject(HttpClient);
-  habitDays: HabitDay[] = [
-    {
-      id: 'asfasfsf',
-      user1Complete: true,
-      user2Complete: false,
-      date: new Date('2023-01-01'),
-    },
-    {
-      id: 'eirurwot',
-      user1Complete: false,
-      user2Complete: false,
-      date: new Date('2023-01-02'),
-    },
-    {
-      id: 'cmgietiet',
-      user1Complete: true,
-      user2Complete: true,
-      date: new Date('2023-01-03'),
-    },
-  ];
 
   constructor() {}
+
+  getHabit(habitId: string) {
+    const url = `http://localhost:3000/habits/${habitId}`;
+    return this.http.get<Habit>(url);
+  }
 }
