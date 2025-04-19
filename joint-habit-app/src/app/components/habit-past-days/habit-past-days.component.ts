@@ -3,10 +3,11 @@ import { HabitsService } from '../../services/habits.service';
 import { HabitDay } from '../../model/habitDay.type';
 import { catchError } from 'rxjs';
 import { Habit } from '../../model/habit.type';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-habit-past-days',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './habit-past-days.component.html',
   styleUrl: './habit-past-days.component.css',
 })
