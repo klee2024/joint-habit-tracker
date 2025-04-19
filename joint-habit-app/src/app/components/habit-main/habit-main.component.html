@@ -10,4 +10,9 @@
   <app-habit-today> </app-habit-today>
   <app-habit-past-days></app-habit-past-days>
 </div>
-<app-streak-counter></app-streak-counter>
+<ng-container *ngIf="habit() as h">
+  <app-streak-counter
+    [streak]="habit()?.streakCounter"
+    [total]="habit()?.totalDaysHabitCompleted"
+  ></app-streak-counter>
+</ng-container>
