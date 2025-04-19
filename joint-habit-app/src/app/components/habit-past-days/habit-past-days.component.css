@@ -1,0 +1,14 @@
+.habit-day {
+  display: flex;
+  flex-direction: column; /* stack vertically */
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.habit-day-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 12px; /* spacing between elements */
+}
