@@ -1,8 +1,10 @@
 <p>login works!</p>
 
-<div class="login-user-form">
-  <div>username:</div>
-  <div>user input</div>
-  <div>password:</div>
-  <div>password</div>
-</div>
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+  <label for="username">Username: </label>
+  <input id="username" type="text" formControlName="username" />
+  <label for="password">Password: </label>
+  <input id="password" type="text" formControlName="password" />
+  <p>Complete the form to enable button.</p>
+  <button type="submit" [disabled]="!loginForm.valid">Submit</button>
+</form>
