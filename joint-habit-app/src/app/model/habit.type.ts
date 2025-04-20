@@ -9,5 +9,5 @@ export type Habit = {
   dateStart: Date;
   streakCounter: number;
   totalDaysHabitCompleted: number;
-  habitDays: HabitDay;
+  habitDays: HabitDay[];
 };
