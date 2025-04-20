@@ -39,6 +39,11 @@ const habitSchema = new Schema({
     default: 0,
   },
   //handled on the backend
+  habitToday: {
+    user1Complete: Boolean,
+    user2Complete: Boolean,
+    date: Date,
+  },
   habitDays: [
     {
       user1Complete: Boolean,

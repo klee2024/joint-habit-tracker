@@ -27,7 +27,7 @@ export class HabitMainComponent {
       .getHabit('67edcb728fac06d8f2f5a7f2')
       .pipe(
         catchError((err) => {
-          console.log(err);
+          console.log('this is the error: ', err);
           throw err;
         })
       )
