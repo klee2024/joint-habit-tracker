@@ -1,1 +1,27 @@
 <p>users-habits works!</p>
+
+<ng-container *ngIf="userHabits() as habits; else habit_error">
+  @for(habit of userHabits(); track habit._id){
+  <h1>{{ habit.title }}</h1>
+  <div class="habit-{{ habit._id }}" id="habit-users">
+    <div class="user" id="user1-{{ habit.user1.username }}">
+      <p>user 1: {{ habit.user1.username }}</p>
+    </div>
+    <div *ngIf="habit.user2">
+      <div class="user" id="user2-{{ habit.user2.username }}">
+        <p>user 2: {{ habit.user2.username }}</p>
+      </div>
+    </div>
+    <div class="streak">
+      <p>streak: {{ habit.streakCounter }}</p>
+      <p>total days completed: {{ habit.totalDaysHabitCompleted }}</p>
+    </div>
+    <!-- add in button to edit habit -->
+    <!-- add in button to delete habit -->
+    <!-- add in button to navigate to habit -->
+  </div>
+  }
+</ng-container>
+<ng-template #habit_error
+  ><p>Oops! There was an error getting the habit</p></ng-template
+>

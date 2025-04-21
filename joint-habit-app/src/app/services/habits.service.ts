@@ -14,4 +14,10 @@ export class HabitsService {
     const url = `http://localhost:3000/habits/${habitId}`;
     return this.http.get<Habit>(url);
   }
+
+  getUserHabits(userId: string) {
+    const url = `http://localhost:3000/habits/user/${userId}`;
+    const userHabits = this.http.get<Array<Habit>>(url);
+    return userHabits;
+  }
 }
