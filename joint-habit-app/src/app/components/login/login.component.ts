@@ -4,6 +4,8 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { UserService } from '../../services/user.service';
 import { catchError } from 'rxjs';
 import { User } from '../../model/user.type';
+import { Router } from '@angular/router';
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -17,6 +19,9 @@ export class LoginComponent {
     username: new FormControl(''),
     password: new FormControl(''),
   });
+
+  constructor(private router: Router) {}
+
   onSubmit() {
     // TODO: Use EventEmitter with form value
     console.warn(this.loginForm.value);
@@ -36,14 +41,9 @@ export class LoginComponent {
         console.log('user: ', user);
         if (user._id) {
           localStorage.setItem('id', user._id);
+          // TODO: navigate to the habits screen
+          this.router.navigate(['/habits']);
         }
       });
   }
 }
-
-// get user input on submit
-// call backend API to get user id
-// set userId in local storage
-// navigate to the habits screen
-// const userId = user._id? || ""
-// localStorage.setItem("id", userId);
