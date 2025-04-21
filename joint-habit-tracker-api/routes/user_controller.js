@@ -17,8 +17,9 @@ router.post("/", async (req, res, next) => {
     if (!newUser) {
       res.status(400).json({ message: "could not create new user" });
     }
+    return res.status(201).json(newUser);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    return res.status(500).json({ message: err.message });
   }
 });
 
@@ -62,7 +63,7 @@ router.get("/username/:username/password/:password", async (req, res, next) => {
     if (!user) {
       res.status(400).json(`username or password is not correct`);
     }
-    res.status(200).json(user);
+    res.status(200).json(user[0]);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
