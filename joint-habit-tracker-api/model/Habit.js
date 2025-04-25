@@ -40,10 +40,14 @@ const habitSchema = new Schema({
   },
   //handled on the backend
   habitToday: {
-    user1Complete: Boolean,
-    user2Complete: Boolean,
-    date: Date,
+    type: Object,
+    default: () => ({
+      user1Complete: false,
+      user2Complete: false,
+      date: new Date(), // create a new Date at document creation time
+    }),
   },
+
   habitDays: [
     {
       user1Complete: Boolean,
