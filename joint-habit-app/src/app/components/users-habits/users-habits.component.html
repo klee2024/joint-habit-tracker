@@ -1,5 +1,3 @@
-<p>users-habits works!</p>
-
 <ng-container *ngIf="userHabits() as habits; else habit_error">
   @for(habit of userHabits(); track habit._id){
   <h1>{{ habit.title }}</h1>
@@ -18,10 +16,15 @@
     </div>
     <!-- add in button to edit habit -->
     <!-- add in button to delete habit -->
-    <!-- add in button to navigate to habit -->
+
+    <button [routerLink]="['/habit']" [queryParams]="{ id: habit._id }">
+      Launch Habit
+    </button>
+
+    <div>--------------------------------</div>
   </div>
   }
 </ng-container>
 <ng-template #habit_error
-  ><p>Oops! There was an error getting the habit</p></ng-template
+  ><p>Oops! There was an error getting this user's habits</p></ng-template
 >

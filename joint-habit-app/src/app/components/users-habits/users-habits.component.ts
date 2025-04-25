@@ -4,10 +4,11 @@ import { Habit } from '../../model/habit.type';
 import { catchError } from 'rxjs';
 import { HabitsService } from '../../services/habits.service';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-users-habits',
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './users-habits.component.html',
   styleUrl: './users-habits.component.css',
 })
