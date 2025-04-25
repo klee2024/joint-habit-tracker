@@ -197,15 +197,26 @@ router.post("/:habitId/habitDays", async (req, res, next) => {
     // updating the streak counter and total days the habit is completed
     // increase the streak and add to the total count
     if (newHabitDay.user1Complete && newHabitDay.user2Complete) {
-      updatedHabit = await Habit.findByIdAndUpdate(habitId, {
-        $push: { habitDays: newHabitDay },
-        $inc: { streakCounter: 1, totalDaysHabitCompleted: 1 },
-      });
+      console.log("both users completed the habit");
+      updatedHabit = await Habit.findByIdAndUpdate(
+        habitId,
+        {
+          $push: { habitDays: newHabitDay },
+          $inc: { streakCounter: 1, totalDaysHabitCompleted: 1 },
+        },
+        { new: true }
+      );
     } else {
-      updatedHabit = await Habit.findByIdAndUpdate(habitId, {
-        $push: { habitDays: newHabitDay },
-        streakCounter: 0,
-      });
+      console.log("users did not complete the habit");
+      updatedHabit = await Habit.findByIdAndUpdate(
+        habitId,
+        {
+          $push: { habitDays: newHabitDay },
+          streakCounter: 0,
+        },
+        { new: true }
+      );
+      console.log(updatedHabit);
     }
 
     if (!updatedHabit) {
