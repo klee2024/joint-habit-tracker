@@ -3,9 +3,22 @@
 <div class="habit-today">
   <p id="date">Today</p>
   <!-- want this to populate based on backend request for other user -->
-  <input type="checkbox" id="guest-user" name="habit" disabled />
-  <div class="line" id="guest-user">-------</div>
+  <input
+    type="checkbox"
+    [id]="user1Id"
+    name="habit"
+    disabled=""
+    [checked]="homeUserChecked"
+    (change)="onCheckboxChange($event)"
+  />
+  <div class="line" [id]="user1Id">-------</div>
   <div class="star"><3</div>
-  <div class="line" id="home-user">-------</div>
-  <input type="checkbox" id="home-user" name="habit" />
+  <div class="line" [id]="user2Id">-------</div>
+  <input
+    type="checkbox"
+    [id]="user2Id"
+    name="habit"
+    [checked]="homeUserChecked"
+    (change)="onCheckboxChange($event)"
+  />
 </div>
