@@ -10,9 +10,7 @@
     </div>
   </div>
   <div class="habit-main" id="habit-tracker">
-    <app-habit-today [user1Id]="h.user1?.id" [user2Id]="h.user2?.id">
-    </app-habit-today>
-    <app-habit-past-days [pastDays]="h.habitDays"></app-habit-past-days>
+    <app-habit-tracker [pastDays]="h.habitDays"></app-habit-tracker>
   </div>
   <app-streak-counter
     [streak]="h.streakCounter"

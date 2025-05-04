@@ -1,18 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { HabitPastDaysComponent } from './habit-past-days.component';
+import { HabitTrackerComponent } from './habit-tracker.component';
 
 describe('HabitPastDaysComponent', () => {
-  let component: HabitPastDaysComponent;
-  let fixture: ComponentFixture<HabitPastDaysComponent>;
+  let component: HabitTrackerComponent;
+  let fixture: ComponentFixture<HabitTrackerComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HabitPastDaysComponent]
-    })
-    .compileComponents();
+      imports: [HabitTrackerComponent],
+    }).compileComponents();
 
-    fixture = TestBed.createComponent(HabitPastDaysComponent);
+    fixture = TestBed.createComponent(HabitTrackerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

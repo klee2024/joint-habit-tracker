@@ -1,0 +1,11 @@
+.habit-day {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.habit-today {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}

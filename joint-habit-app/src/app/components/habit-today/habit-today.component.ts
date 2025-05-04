@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-habit-today',
-  imports: [Input],
+  imports: [],
   templateUrl: './habit-today.component.html',
   styleUrl: './habit-today.component.css',
 })
@@ -11,6 +11,7 @@ export class HabitTodayComponent implements OnInit {
   @Input() user1Id: string | null = null;
   @Input() user2Id: string | null = null;
 
+  activeUser: string | null = null;
   homeUserChecked = false;
   habitId: string | null = null;
 
