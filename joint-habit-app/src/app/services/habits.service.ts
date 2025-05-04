@@ -20,4 +20,12 @@ export class HabitsService {
     const userHabits = this.http.get<Array<Habit>>(url);
     return userHabits;
   }
+
+  updateHabitTodayById(
+    userId: string,
+    body: { user1Complete: boolean } | { user2Complete: boolean }
+  ) {
+    const url = `http://localhost:3000/habits/${userId}/habit-today`;
+    return this.http.patch(url, body);
+  }
 }

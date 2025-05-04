@@ -230,6 +230,54 @@ router.post("/:habitId/habitDays", async (req, res, next) => {
   }
 });
 
+router.patch("/:habitId/habit-today", async (req, res, next) => {
+  try {
+    // TODO: add in validation
+    const habitId = req.params.habitId;
+    const [userKey, userCompletedValue] = Object.entries(req.body)[0];
+    if (!isValidMongooseId(habitId)) {
+      return res.status(400).json({ message: "Habit ID is not valid" });
+    }
+    console.log("userkey ", userKey);
+    console.log("userCompletedValue ", userCompletedValue);
+
+    const updatedHabit = await Habit.findByIdAndUpdate(
+      habitId,
+      {
+        $set: {
+          [`habitToday.${userKey}`]: userCompletedValue,
+          "habitToday.date": new Date(), // Update the date field to the current date
+        },
+      },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedHabit) {
+      return res
+        .status(404)
+        .json({ message: `Habit ${habitId} does not exist` });
+    }
+
+    return res.status(200).json(updatedHabit);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+router.patch("/:habitId/push-habit-today", async (req, res, next) => {
+  try {
+    const habitId = req.params.habitId;
+    if (!isValidMongooseId(habitId)) {
+      return res.status(400).json({ message: "Habit ID is not valid" });
+    }
+    const habit = await Habit.findById(habitId);
+    console.log(habit.habitToday);
+    return res.status(200).json(habit);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 // DELETE
 // deleting a habit
 // only delete habit if both users want to delete
