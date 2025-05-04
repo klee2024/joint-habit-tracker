@@ -1,5 +1,4 @@
 import { Component, inject, OnInit, signal, OnDestroy } from '@angular/core';
-import { HabitTodayComponent } from '../habit-today/habit-today.component';
 import { HabitTrackerComponent } from '../habit-tracker/habit-tracker.component';
 import { StreakCounterComponent } from '../streak-counter/streak-counter.component';
 import { HabitsService } from '../../services/habits.service';
@@ -11,12 +10,7 @@ import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-habit-main',
-  imports: [
-    HabitTodayComponent,
-    HabitTrackerComponent,
-    StreakCounterComponent,
-    CommonModule,
-  ],
+  imports: [HabitTrackerComponent, StreakCounterComponent, CommonModule],
   templateUrl: './habit-main.component.html',
   styleUrl: './habit-main.component.css',
 })
