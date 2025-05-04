@@ -10,7 +10,7 @@
   />
   <div class="line" [id]="partnerUser">-------</div>
   <div class="star"><3</div>
-  <div class="line" [id]="loggedInUser">-------</div>
+  <div class="line-loggedin-user" [id]="loggedInUser">-------</div>
   <input
     *ngIf="loggedInUser"
     type="checkbox"
@@ -26,7 +26,9 @@
     type="checkbox"
     id="guest-user"
     name="habit"
-    [checked]="habitDay.user1Complete"
+    [checked]="
+      loggedInUser === 'user1' ? habitDay.user2Complete : habitDay.user1Complete
+    "
     disabled
   />
   <div class="line" id="guest-user">-------</div>
@@ -40,9 +42,11 @@
   <div class="line" id="home-user">-------</div>
   <input
     type="checkbox"
-    id="home-user"
+    [id]="loggedInUser"
     name="habit"
-    [checked]="habitDay.user2Complete"
+    [checked]="
+      loggedInUser === 'user1' ? habitDay.user1Complete : habitDay.user2Complete
+    "
     disabled
   />
 </div>
