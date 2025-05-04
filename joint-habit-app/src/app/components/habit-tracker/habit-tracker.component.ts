@@ -1,6 +1,7 @@
 import { Component, inject, OnInit, signal, Input, input } from '@angular/core';
 import { HabitDay } from '../../model/habitDay.type';
 import { CommonModule } from '@angular/common';
+import { User } from '../../model/user.type';
 
 @Component({
   selector: 'app-habit-tracker',
@@ -9,9 +10,9 @@ import { CommonModule } from '@angular/common';
   styleUrl: './habit-tracker.component.css',
 })
 export class HabitTrackerComponent {
-  @Input() user1Id: string | null = null;
-  @Input() user2Id: string | null = null;
-  activeUser: string | null = null;
+  @Input() loggedInUserDetails: User | null = null;
+  @Input() loggedInUser: 'user1' | 'user2' | null = null;
+  @Input() partnerUser: User | null = null;
   homeUserChecked = false;
   habitId: string | null = null;
 

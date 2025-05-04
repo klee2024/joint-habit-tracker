@@ -2,6 +2,7 @@
 <div>back button</div>
 <div>edit button</div>
 <ng-container *ngIf="habit() as h; else habit_error">
+  <h2>logged in as {{ loggedInAsValue }}</h2>
   <h1>{{ h.title }}</h1>
   <div class="habit-main" id="habit-users">
     <div class="user" id="guest-user" *ngIf="partnerUser() as user">
@@ -12,7 +13,12 @@
     </div>
   </div>
   <div class="habit-main" id="habit-tracker">
-    <app-habit-tracker [pastDays]="h.habitDays"></app-habit-tracker>
+    <app-habit-tracker
+      [pastDays]="h.habitDays"
+      [loggedInUserDetails]="loggedInUser()"
+      [loggedInUser]="loggedInAsValue"
+      [partnerUser]="partnerUser()"
+    ></app-habit-tracker>
   </div>
   <app-streak-counter
     [streak]="h.streakCounter"

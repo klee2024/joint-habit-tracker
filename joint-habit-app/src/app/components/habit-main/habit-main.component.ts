@@ -42,6 +42,10 @@ export class HabitMainComponent implements OnInit, OnDestroy {
     return habit[partnerRole];
   });
 
+  get loggedInAsValue() {
+    return this.loggedInAs();
+  }
+
   habitService = inject(HabitsService);
   habit = signal<Habit>(null as unknown as Habit);
   habitId: string | null = null;
