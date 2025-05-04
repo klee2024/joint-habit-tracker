@@ -4,9 +4,11 @@
 <ng-container *ngIf="habit() as h; else habit_error">
   <h1>{{ h.title }}</h1>
   <div class="habit-main" id="habit-users">
-    <div class="user" id="guest-user">user 1: {{ h.user1?.username }}</div>
-    <div class="user" id="home-user">
-      user 2: {{ h.user2?.username || null }}
+    <div class="user" id="guest-user" *ngIf="partnerUser() as user">
+      guest user: {{ user.username }}
+    </div>
+    <div class="user" id="home-user" *ngIf="loggedInUser() as user">
+      home user: {{ user.username }}
     </div>
   </div>
   <div class="habit-main" id="habit-tracker">
