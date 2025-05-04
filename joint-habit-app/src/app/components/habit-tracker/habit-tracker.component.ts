@@ -2,6 +2,7 @@ import { Component, inject, OnInit, signal, Input, input } from '@angular/core';
 import { HabitDay } from '../../model/habitDay.type';
 import { CommonModule } from '@angular/common';
 import { User } from '../../model/user.type';
+import { HabitToday } from '../../model/habitToday.type';
 
 @Component({
   selector: 'app-habit-tracker',
@@ -17,4 +18,5 @@ export class HabitTrackerComponent {
   habitId: string | null = null;
 
   pastDays = input<Array<HabitDay>>();
+  @Input() habitToday: HabitToday | null = null;
 }

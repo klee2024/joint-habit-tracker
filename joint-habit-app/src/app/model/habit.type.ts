@@ -1,5 +1,6 @@
 import type { HabitDay } from './habitDay.type';
 import type { User } from './user.type';
+import { HabitToday } from './habitToday.type';
 export type Habit = {
   _id: string;
   title: string;
@@ -11,4 +12,5 @@ export type Habit = {
   streakCounter: number;
   totalDaysHabitCompleted: number;
   habitDays: HabitDay[];
+  habitToday: HabitToday;
 };

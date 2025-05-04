@@ -2,20 +2,30 @@
   <p id="date">Today</p>
   <!-- want this to populate based on backend request for other user -->
   <input
-    *ngIf="partnerUser"
+    *ngIf="partnerUser && habitToday"
     type="checkbox"
     name="habit"
     [id]="partnerUser.username"
     disabled=""
+    [checked]="
+      loggedInUser === 'user1'
+        ? habitToday.user2Complete
+        : habitToday.user1Complete
+    "
   />
   <div class="line" [id]="partnerUser">-------</div>
   <div class="star"><3</div>
   <div class="line-loggedin-user" [id]="loggedInUser">-------</div>
   <input
-    *ngIf="loggedInUser"
+    *ngIf="loggedInUser && habitToday"
     type="checkbox"
     name="habit"
     [id]="loggedInUser"
+    [checked]="
+      loggedInUser === 'user1'
+        ? habitToday.user1Complete
+        : habitToday.user2Complete
+    "
   />
 </div>
 
