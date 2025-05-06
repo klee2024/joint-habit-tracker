@@ -28,4 +28,10 @@ export class HabitsService {
     const url = `http://localhost:3000/habits/${userId}/habit-today`;
     return this.http.patch(url, body);
   }
+
+  updateHabitDays(habitId: string) {
+    const url = `http://localhost:3000/habits/${habitId}/habit-days`;
+    const updatedHabit = this.http.patch<Habit>(url, {});
+    return updatedHabit;
+  }
 }

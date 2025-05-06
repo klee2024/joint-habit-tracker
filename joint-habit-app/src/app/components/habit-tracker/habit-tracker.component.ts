@@ -23,6 +23,10 @@ export class HabitTrackerComponent {
 
   private habitsService = inject(HabitsService);
 
+  ngOnInit(): void {
+    console.log(this.loggedInUser);
+  }
+
   updateHabitToday(event: Event): void {
     console.log('update habit today was invoked');
     const isChecked = (event.target as HTMLInputElement).checked;

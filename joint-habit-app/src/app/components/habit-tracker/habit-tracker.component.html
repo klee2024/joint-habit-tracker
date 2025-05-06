@@ -14,7 +14,13 @@
     "
   />
   <div class="line" [id]="partnerUser">-------</div>
-  <div class="star"><3</div>
+  <input
+    type="checkbox"
+    id="both-users-today"
+    name="habit"
+    [checked]="habitToday?.user1Complete && habitToday?.user2Complete"
+    disabled
+  />
   <div class="line-loggedin-user" [id]="loggedInUser">-------</div>
   <input
     *ngIf="loggedInUser && habitToday"
@@ -29,7 +35,6 @@
     (change)="updateHabitToday($event)"
   />
 </div>
-
 @for(habitDay of pastDays(); track habitDay._id){
 <div class="habit-day" [id]="habitDay._id">
   <p id="date">{{ habitDay.date | date : "MMM d, y" }}</p>

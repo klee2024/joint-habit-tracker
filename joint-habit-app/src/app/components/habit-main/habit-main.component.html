@@ -2,7 +2,6 @@
 <div>back button</div>
 <div>edit button</div>
 <ng-container *ngIf="habit() as h; else habit_error">
-  <h2>logged in as {{ loggedInAsValue }}</h2>
   <h1>{{ h.title }}</h1>
   <div class="habit-main" id="habit-users">
     <div class="user" id="guest-user" *ngIf="partnerUser() as user">

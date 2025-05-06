@@ -60,8 +60,13 @@ export class HabitMainComponent implements OnInit, OnDestroy {
       }
     );
     if (this.habitId) {
+      // retroactively push habitToday to the habitPastDays array
+      // if the current date is after habitToday
+      // set the habit to the response of the PATCH request
+      // response should return the newly updated request
+
       this.habitService
-        .getHabit(this.habitId)
+        .updateHabitDays(this.habitId)
         .pipe(
           catchError((err) => {
             console.log('this is the error: ', err);
@@ -76,6 +81,7 @@ export class HabitMainComponent implements OnInit, OnDestroy {
         });
     }
   }
+
   ngOnDestroy() {
     if (this.queryParamsSubscription) {
       this.queryParamsSubscription.unsubscribe();
@@ -83,8 +89,10 @@ export class HabitMainComponent implements OnInit, OnDestroy {
   }
 
   setUsers(habit: Habit) {
+    console.log('this is the habit: ', habit);
     // get the logged in user from local storage
     const loggedInUserId = localStorage.getItem('id');
+    console.log('logged in user id ', loggedInUserId);
     if (
       loggedInUserId === habit.user1._id ||
       loggedInUserId === habit.user2._id

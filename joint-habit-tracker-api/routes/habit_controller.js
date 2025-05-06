@@ -192,7 +192,9 @@ router.patch("/:habitId/habit-days", async (req, res, next) => {
     }
 
     // Fetch the habit to get the habitDays array
-    const habit = await Habit.findById(habitId);
+    const habit = await Habit.findById(habitId)
+      .populate("user1")
+      .populate("user2");
     if (!habit) {
       return res
         .status(404)
@@ -205,7 +207,7 @@ router.patch("/:habitId/habit-days", async (req, res, next) => {
     const habitDays = habit.habitDays;
     const lastHabitDay =
       habitDays.length > 0 ? habitDays[habitDays.length - 1] : null; // Get the last habit day if it exists
-    console.log(lastHabitDay);
+    console.log("last habit day ", lastHabitDay);
 
     // Calculate the difference in days between the last habit day and the new habit day
     const lastDate = lastHabitDay ? new Date(lastHabitDay.date) : null;
@@ -215,7 +217,10 @@ router.patch("/:habitId/habit-days", async (req, res, next) => {
 
     let updatedHabit;
 
-    if (!lastHabitDay) {
+    if (daysDifference === 0) {
+      console.log("habitToday is still today");
+      updatedHabit = habit;
+    } else if (!lastHabitDay && daysDifference != 0) {
       // If habitDays is empty, add the new habit day as the first entry
       updatedHabit = await Habit.findByIdAndUpdate(
         habitId,
@@ -233,7 +238,10 @@ router.patch("/:habitId/habit-days", async (req, res, next) => {
           },
         },
         { new: true }
-      );
+      )
+        .populate("user1")
+        .populate("user2");
+      console.log(updatedHabit);
     } else if (daysDifference === 1) {
       // If the new habit day is 1 day after the last habit day
       if (habitToday.user1Complete && habitToday.user2Complete) {
@@ -245,7 +253,9 @@ router.patch("/:habitId/habit-days", async (req, res, next) => {
             $inc: { streakCounter: 1, totalDaysHabitCompleted: 1 },
           },
           { new: true }
-        );
+        )
+          .populate("user1")
+          .populate("user2");
       } else {
         // One or both users did not complete the habit
         updatedHabit = await Habit.findByIdAndUpdate(
@@ -255,7 +265,9 @@ router.patch("/:habitId/habit-days", async (req, res, next) => {
             $set: { streakCounter: 0 },
           },
           { new: true }
-        );
+        )
+          .populate("user1")
+          .populate("user2");
       }
     } else if (daysDifference > 1) {
       // If there are multiple days between the last habit day and the new habit day
@@ -286,7 +298,9 @@ router.patch("/:habitId/habit-days", async (req, res, next) => {
           },
         },
         { new: true }
-      );
+      )
+        .populate("user1")
+        .populate("user2");
     } else {
       // If the new habit day is not valid (e.g., same day or in the past)
       return res.status(400).json({ message: "Invalid habit day date" });
