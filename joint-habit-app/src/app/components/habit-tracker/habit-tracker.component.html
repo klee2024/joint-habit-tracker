@@ -1,0 +1,69 @@
+<div class="habit-today">
+  <p id="date">Today</p>
+  <!-- want this to populate based on backend request for other user -->
+  <input
+    *ngIf="partnerUser && habitToday"
+    type="checkbox"
+    name="habit"
+    [id]="partnerUser.username"
+    disabled=""
+    [checked]="
+      loggedInUser === 'user1'
+        ? habitToday.user2Complete
+        : habitToday.user1Complete
+    "
+  />
+  <div class="line" [id]="partnerUser">-------</div>
+  <input
+    type="checkbox"
+    id="both-users-today"
+    name="habit"
+    [checked]="habitToday?.user1Complete && habitToday?.user2Complete"
+    disabled
+  />
+  <div class="line-loggedin-user" [id]="loggedInUser">-------</div>
+  <input
+    *ngIf="loggedInUser && habitToday"
+    type="checkbox"
+    name="habit"
+    [id]="loggedInUser"
+    [checked]="
+      loggedInUser === 'user1'
+        ? habitToday.user1Complete
+        : habitToday.user2Complete
+    "
+    (change)="updateHabitToday($event)"
+  />
+</div>
+@for(habitDay of pastDays(); track habitDay._id){
+<div class="habit-day" [id]="habitDay._id">
+  <p id="date">{{ habitDay.date | date : "MMM d, y" }}</p>
+  <input
+    type="checkbox"
+    id="guest-user"
+    name="habit"
+    [checked]="
+      loggedInUser === 'user1' ? habitDay.user2Complete : habitDay.user1Complete
+    "
+    disabled
+  />
+  <div class="line" id="guest-user">-------</div>
+  <input
+    type="checkbox"
+    id="both-users"
+    name="habit"
+    [checked]="habitDay.user1Complete && habitDay.user2Complete"
+    disabled
+  />
+  <div class="line" id="home-user">-------</div>
+  <input
+    type="checkbox"
+    [id]="loggedInUser"
+    name="habit"
+    [checked]="
+      loggedInUser === 'user1' ? habitDay.user1Complete : habitDay.user2Complete
+    "
+    disabled
+  />
+</div>
+}

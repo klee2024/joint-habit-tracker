@@ -183,37 +183,184 @@ router.put("/:habitId/user2/:userId", async (req, res, next) => {
 // TODO: test this
 // adding on a new day to a habit
 // TODO: add middleware for a habit day payload
-router.post("/:habitId/habitDays", async (req, res, next) => {
+router.patch("/:habitId/habit-days", async (req, res, next) => {
   try {
     const habitId = req.params.habitId;
+
     if (!isValidMongooseId(habitId)) {
       return res.status(400).json({ message: "Habit ID is not valid" });
     }
 
-    const newHabitDay = req.body;
-    newHabitDay[date] = Date.now();
+    // Fetch the habit to get the habitDays array
+    const habit = await Habit.findById(habitId)
+      .populate("user1")
+      .populate("user2");
+    if (!habit) {
+      return res
+        .status(404)
+        .json({ message: `Habit ${habitId} does not exist` });
+    }
+
+    const habitToday = habit.habitToday;
+    const habitTodayDate = new Date(habitToday.date);
+
+    const habitDays = habit.habitDays;
+    const lastHabitDay =
+      habitDays.length > 0 ? habitDays[habitDays.length - 1] : null; // Get the last habit day if it exists
+    console.log("last habit day ", lastHabitDay);
+
+    // Calculate the difference in days between the last habit day and the new habit day
+    const lastDate = lastHabitDay ? new Date(lastHabitDay.date) : null;
+    const daysDifference = lastDate
+      ? Math.floor((habitTodayDate - lastDate) / (1000 * 60 * 60 * 24))
+      : 1;
 
     let updatedHabit;
-    // updating the streak counter and total days the habit is completed
-    // increase the streak and add to the total count
-    if (newHabitDay.user1 && newHabitDay.user2) {
-      updatedHabit = await Habit.findByIdAndUpdate(habitId, {
-        $push: { habitDays: newHabitDay },
-        $inc: { streakCounter: 1, totalDaysHabitCompleted: 1 },
-      });
+
+    if (daysDifference === 0) {
+      console.log("habitToday is still today");
+      updatedHabit = habit;
+    } else if (!lastHabitDay && daysDifference != 0) {
+      // If habitDays is empty, add the new habit day as the first entry
+      updatedHabit = await Habit.findByIdAndUpdate(
+        habitId,
+        {
+          $push: {
+            habitDays: habitToday,
+          },
+          $set: {
+            streakCounter:
+              habitToday.user1Complete && habitToday.user2Complete ? 1 : 0,
+          },
+          $inc: {
+            totalDaysHabitCompleted:
+              habitToday.user1Complete && habitToday.user2Complete ? 1 : 0,
+          },
+        },
+        { new: true }
+      )
+        .populate("user1")
+        .populate("user2");
+      console.log(updatedHabit);
+    } else if (daysDifference === 1) {
+      // If the new habit day is 1 day after the last habit day
+      if (habitToday.user1Complete && habitToday.user2Complete) {
+        // Both users completed the habit
+        updatedHabit = await Habit.findByIdAndUpdate(
+          habitId,
+          {
+            $push: { habitDays: habitToday },
+            $inc: { streakCounter: 1, totalDaysHabitCompleted: 1 },
+          },
+          { new: true }
+        )
+          .populate("user1")
+          .populate("user2");
+      } else {
+        // One or both users did not complete the habit
+        updatedHabit = await Habit.findByIdAndUpdate(
+          habitId,
+          {
+            $push: { habitDays: habitToday },
+            $set: { streakCounter: 0 },
+          },
+          { new: true }
+        )
+          .populate("user1")
+          .populate("user2");
+      }
+    } else if (daysDifference > 1) {
+      // If there are multiple days between the last habit day and the new habit day
+      const habitDaysToAdd = [];
+      for (let i = 1; i < daysDifference; i++) {
+        const missedDay = {
+          user1Complete: false,
+          user2Complete: false,
+          date: new Date(lastDate.getTime() + i * 24 * 60 * 60 * 1000), // Add i days to the last date
+        };
+        habitDaysToAdd.push(missedDay);
+      }
+
+      // Add the missed days and the new habit day
+      habitDaysToAdd.push(habitToday);
+
+      updatedHabit = await Habit.findByIdAndUpdate(
+        habitId,
+        {
+          $push: { habitDays: { $each: habitDaysToAdd } },
+          $set: {
+            streakCounter:
+              habitToday.user1Complete && habitToday.user2Complete ? 1 : 0,
+          },
+          $inc: {
+            totalDaysHabitCompleted:
+              habitToday.user1Complete && habitToday.user2Complete ? 1 : 0,
+          },
+        },
+        { new: true }
+      )
+        .populate("user1")
+        .populate("user2");
     } else {
-      updatedHabit = await Habit.findByIdAndUpdate(habitId, {
-        $push: { habitDays: newHabitDay },
-        streakCounter: 0,
-      });
+      // If the new habit day is not valid (e.g., same day or in the past)
+      return res.status(400).json({ message: "Invalid habit day date" });
     }
 
     if (!updatedHabit) {
       return res
         .status(400)
-        .json({ message: `habit ${habitId} habit does not exist` });
+        .json({ message: `Habit ${habitId} could not be updated` });
     }
+
     return res.status(200).json(updatedHabit);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+router.patch("/:habitId/habit-today", async (req, res, next) => {
+  try {
+    // TODO: add in validation
+    const habitId = req.params.habitId;
+    const [userKey, userCompletedValue] = Object.entries(req.body)[0];
+    if (!isValidMongooseId(habitId)) {
+      return res.status(400).json({ message: "Habit ID is not valid" });
+    }
+    console.log("userkey ", userKey);
+    console.log("userCompletedValue ", userCompletedValue);
+
+    const updatedHabit = await Habit.findByIdAndUpdate(
+      habitId,
+      {
+        $set: {
+          [`habitToday.${userKey}`]: userCompletedValue,
+          "habitToday.date": new Date(), // Update the date field to the current date
+        },
+      },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedHabit) {
+      return res
+        .status(404)
+        .json({ message: `Habit ${habitId} does not exist` });
+    }
+
+    return res.status(200).json(updatedHabit);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+router.patch("/:habitId/push-habit-today", async (req, res, next) => {
+  try {
+    const habitId = req.params.habitId;
+    if (!isValidMongooseId(habitId)) {
+      return res.status(400).json({ message: "Habit ID is not valid" });
+    }
+    const habit = await Habit.findById(habitId);
+    console.log(habit.habitToday);
+    return res.status(200).json(habit);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

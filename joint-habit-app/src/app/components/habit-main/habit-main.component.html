@@ -1,13 +1,31 @@
 <p>----- habit-main -----</p>
 <div>back button</div>
 <div>edit button</div>
-<h1>habit name</h1>
-<div class="habit-main" id="habit-users">
-  <div class="user" id="guest-user">guest user profile</div>
-  <div class="user" id="home-user">home user profile</div>
-</div>
-<div class="habit-main" id="habit-tracker">
-  <app-habit-today> </app-habit-today>
-  <app-habit-past-days></app-habit-past-days>
-</div>
-<app-streak-counter></app-streak-counter>
+<ng-container *ngIf="habit() as h; else habit_error">
+  <h1>{{ h.title }}</h1>
+  <div class="habit-main" id="habit-users">
+    <div class="user" id="guest-user" *ngIf="partnerUser() as user">
+      guest user: {{ user.username }}
+    </div>
+    <div class="user" id="home-user" *ngIf="loggedInUser() as user">
+      home user: {{ user.username }}
+    </div>
+  </div>
+  <div class="habit-main" id="habit-tracker">
+    <app-habit-tracker
+      [habitToday]="h.habitToday"
+      [pastDays]="h.habitDays"
+      [loggedInUserDetails]="loggedInUser()"
+      [loggedInUser]="loggedInAsValue"
+      [partnerUser]="partnerUser()"
+      [habitId]="h._id"
+    ></app-habit-tracker>
+  </div>
+  <app-streak-counter
+    [streak]="h.streakCounter"
+    [total]="h.totalDaysHabitCompleted"
+  ></app-streak-counter>
+</ng-container>
+<ng-template #habit_error
+  ><p>Oops! There was an error getting the habit</p></ng-template
+>

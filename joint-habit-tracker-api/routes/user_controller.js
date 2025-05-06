@@ -17,8 +17,9 @@ router.post("/", async (req, res, next) => {
     if (!newUser) {
       res.status(400).json({ message: "could not create new user" });
     }
+    return res.status(201).json(newUser);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    return res.status(500).json({ message: err.message });
   }
 });
 
@@ -48,6 +49,21 @@ router.get("/:userId", async (req, res, next) => {
       res.status(400).json(`user ${userId} does not exist`);
     }
     res.status(200).json(user);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// GET a specific user by username and password (MVP w/o auth)
+router.get("/username/:username/password/:password", async (req, res, next) => {
+  try {
+    const username = req.params.username;
+    const password = req.params.password;
+    const user = await User.find({ username: username, password: password });
+    if (!user) {
+      res.status(400).json(`username or password is not correct`);
+    }
+    res.status(200).json(user[0]);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
