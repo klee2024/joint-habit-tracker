@@ -9,8 +9,6 @@ import cors from "cors";
 import userController from "./routes/user_controller.js";
 import habitController from "./routes/habit_controller.js";
 
-const port = 3000;
-
 // get environment variable from .env
 dotenv.config();
 
@@ -49,8 +47,7 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500).json({ message: err.message });
 });
 
-const listener = () => {
-  console.log(`server running on port ${port}`);
-};
-
-app.listen(port, listener);
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
