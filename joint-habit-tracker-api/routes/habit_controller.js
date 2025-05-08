@@ -215,13 +215,25 @@ router.patch("/:habitId/habit-days", async (req, res, next) => {
       ? Math.floor((habitTodayDate - lastDate) / (1000 * 60 * 60 * 24))
       : 1;
 
+    // calculate the difference in days between habitToday and when the habit was created
+    const daysSinceHabitCreation =
+      Math.floor((habitTodayDate - habit.dateStart) / (1000 * 60 * 60 * 24)) /
+      habit.dateStart;
     let updatedHabit;
 
-    if (daysDifference === 0) {
+    const currentDate = new Date();
+    const daysSinceHabitToday = Math.floor(
+      (currentDate - habitTodayDate) / (1000 * 60 * 60 * 24)
+    );
+    console.log("days difference: ", daysDifference);
+    console.log("days since habit today: ", daysSinceHabitToday);
+
+    if (daysDifference === 0 || daysSinceHabitToday === 0) {
       console.log("habitToday is still today");
       updatedHabit = habit;
-    } else if (!lastHabitDay && daysDifference != 0) {
-      // If habitDays is empty, add the new habit day as the first entry
+    } else if (habitDays.length === 0 && daysSinceHabitCreation > 0) {
+      // If habitDays is empty, and it's been at least one day since the
+      // habit was created, add habitToday to habitDays
       updatedHabit = await Habit.findByIdAndUpdate(
         habitId,
         {
